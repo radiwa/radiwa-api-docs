@@ -1,80 +1,155 @@
 FORMAT: 1A
 HOST: http://polls.apiblueprint.org/
 
-# radiwa
+# Radiwa Server
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+## Users [/api/v1/users]
 
-## Questions Collection [/questions]
-
-### List All Questions [GET]
+### List of Users [GET /api/v1/users]
 
 + Response 200 (application/json)
-
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
-    + Headers
-
-            Location: /questions/2
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "data": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "id": "1",
+                        "attributes": {
+                            "username": "admin"
+                        }
+                    },
+                    {
+                       "id": "11",
+                        "attributes": {
+                            "username": "some-user-name"
+                        }
                     }
                 ]
             }
+
+### User Info [GET /api/v1/users/{user_id}]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "data": {
+                    "id": "11",
+                    "attributes": {
+                        "username": "some-user-name"
+                    }
+                }
+            }
+
+### Authorization [POST /api/v1/users/{user_id}]
+
++ Request (application/json)
+        
+    + Body
+
+            {
+                "data": {
+                    "id": "11",
+                    "attributes": {
+                        "username": "some-user-name",
+                        "password": "qwer123"
+                    }
+                }
+            }
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "data": {
+                    "id": "11",
+                    "attributes": {
+                        "username": "some-user-name",
+                        "access-token": "qweqwe"
+                    }
+                }
+            }
+
+### Create User [POST /api/v1/users]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "data": {
+                    "attributes": {
+                        "username": "ivan",
+                        "password": "strong password"
+                    }
+                }
+            }
+        
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "data": {
+                    "id": "12",
+                    "attributes": {
+                        "username": "ivan"
+                    }
+                }
+            }
+
+### Update User [PATCH /api/v1/users/{user_id}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer ourAccessToken
+            Location: /users/12
+
+    + Body
+    
+            {
+                "data": {
+                    "id": "12",
+                    "attributes": {
+                        "username": "some-user",
+                        "password": "new strong password"
+                    }
+                }
+            }
+        
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "data": {
+                    "id": "12",
+                    "attributes": {
+                        "username": "some-user"
+                    }
+                }
+            }
+
+### Destroy User [DELETE /api/v1/users/{user_id}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer ourAccessToken
+
+    + Body
+    
+            {
+                "data": {
+                    "id": "12"
+                }
+            }
+
++ Response 204 (application/json)
